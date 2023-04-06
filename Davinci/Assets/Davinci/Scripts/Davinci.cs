@@ -30,6 +30,7 @@ namespace DavinciCore
         private bool enableLog = false;
         private float fadeTime = 1;
         private bool cached = true;
+        private string authToken;
 
         private enum RendererType
         {
@@ -278,6 +279,20 @@ namespace DavinciCore
         }
 
         /// <summary>
+        /// Set authorization token.
+        /// </summary>
+        /// <param name="token">authorization token</param>
+        /// <returns></returns>
+        public Davinci setAuthToken(string token)
+        {
+            if (enableLog)
+                Debug.Log("[Davinci] Authorization Token set: " + token);
+
+            authToken = token;
+            return this;
+        }
+
+        /// <summary>
         /// Start davinci process.
         /// </summary>
         public void start()
@@ -357,9 +372,11 @@ namespace DavinciCore
 
 #if UNITY_2018_3_OR_NEWER
             UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
+            if  (!String.IsNullOrWhitespace(authToken))
+                www.SetRequestHeader("Authorization", $"Bearer {authToken}");
             yield return www.SendWebRequest();
 #else
-        var www = new WWW(url);
+            var www = new WWW(url);
 #endif
 
             while (!www.isDone)
@@ -373,7 +390,7 @@ namespace DavinciCore
 #if UNITY_2018_3_OR_NEWER
                 progress = Mathf.FloorToInt(www.downloadProgress * 100);
 #else
-            progress = Mathf.FloorToInt(www.progress * 100);
+                progress = Mathf.FloorToInt(www.progress * 100);
 #endif
                 if (onDownloadProgressChange != null)
                     onDownloadProgressChange.Invoke(progress);
@@ -388,8 +405,8 @@ namespace DavinciCore
             if (www.error == null)
                 File.WriteAllBytes(filePath + uniqueHash, www.downloadHandler.data);
 #else
-        if (www.error == null)
-            File.WriteAllBytes(filePath + uniqueHash, www.bytes);
+            if (www.error == null)
+                File.WriteAllBytes(filePath + uniqueHash, www.bytes);
 #endif
 
             www.Dispose();
