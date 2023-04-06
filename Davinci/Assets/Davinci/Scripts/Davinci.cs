@@ -479,7 +479,7 @@ namespace DavinciCore
                     case RendererType.renderer:
                         Renderer renderer = targetObj.GetComponent<Renderer>();
 
-                        if (renderer == null || renderer.materials[1] == null)
+                        if (renderer == null || renderer.material == null)
                             break;
 
                         renderer.material.mainTexture = texture;
