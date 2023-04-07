@@ -74,6 +74,16 @@ namespace DavinciCore
             return new GameObject("Davinci").AddComponent<Davinci>();
         }
 
+        private void OnDestroy()
+        {
+            if (underProcessDavincies.ContainsKey(uniqueHash) && underProcessDavincies[uniqueHash] == this) {
+                if (enableLog)
+                    Debug.Log("[Davinci] Removing Davinci object while download unfinished: " + uniqueHash);
+
+                underProcessDavincies.Remove(uniqueHash);
+            }
+        }
+
         /// <summary>
         /// Set image url for download.
         /// </summary>
@@ -314,7 +324,7 @@ namespace DavinciCore
                 return;
             }
 
-        if (rendererType == RendererType.none || (targetObj == null && targetMaterial == null))
+		    if (rendererType == RendererType.none || (targetObj == null && targetMaterial == null))
             {
                 error("Target has not been set. Use 'into' function to set target component.");
                 return;
@@ -326,8 +336,7 @@ namespace DavinciCore
             if (loadingPlaceholder != null)
                 SetLoadingImage();
 
-            if (onStartAction != null)
-                onStartAction.Invoke();
+            onStartAction?.Invoke();
 
             if (!Directory.Exists(filePath))
             {
@@ -341,18 +350,57 @@ namespace DavinciCore
                 Davinci sameProcess = underProcessDavincies[uniqueHash];
                 sameProcess.onDownloadedAction += () =>
                 {
-                    if (onDownloadedAction != null)
-                        onDownloadedAction.Invoke();
+                    // As this action will be called at a later time by another Davinci instance,
+                    // make sure that this instance hasn't been destroyed in the meantime.
+                    if (this == null)
+                        return;
+
+                    onDownloadedAction?.Invoke();
 
                     loadSpriteToImage();
+                };
+                sameProcess.OnLoadedAction += () =>
+                {
+                    // As this action will be called at a later time by another Davinci instance,
+                    // make sure that this instance hasn't been destroyed in the meantime.
+                    if (this == null)
+                        return;
+
+                    OnLoadedAction?.Invoke();
+                };
+                sameProcess.onEndAction += () =>
+                {
+                    // As this action will be called at a later time by another Davinci instance,
+                    // make sure that this instance hasn't been destroyed in the meantime.
+                    if (this == null)
+                        return;
+
+                    onEndAction?.Invoke();
+                };
+                sameProcess.onDownloadProgressChange += () =>
+                {
+                    // As this action will be called at a later time by another Davinci instance,
+                    // make sure that this instance hasn't been destroyed in the meantime.
+                    if (this == null)
+                        return;
+
+                    onDownloadProgressChange?.Invoke();
+                };
+                sameProcess.onErrorAction += () =>
+                {
+                    // As this action will be called at a later time by another Davinci instance,
+                    // make sure that this instance hasn't been destroyed in the meantime.
+                    if (this == null)
+                        return;
+
+                    onErrorAction?.Invoke();
                 };
             }
             else
             {
                 if (File.Exists(filePath + uniqueHash))
                 {
-                    if (onDownloadedAction != null)
-                        onDownloadedAction.Invoke();
+                    onDownloadedAction?.Invoke();
 
                     loadSpriteToImage();
                 }
@@ -392,8 +440,7 @@ namespace DavinciCore
 #else
                 progress = Mathf.FloorToInt(www.progress * 100);
 #endif
-                if (onDownloadProgressChange != null)
-                    onDownloadProgressChange.Invoke(progress);
+                onDownloadProgressChange?.Invoke(progress);
 
                 if (enableLog)
                     Debug.Log("[Davinci] Downloading progress : " + progress + "%");
@@ -412,8 +459,7 @@ namespace DavinciCore
             www.Dispose();
             www = null;
 
-            if (onDownloadedAction != null)
-                onDownloadedAction.Invoke();
+            onDownloadedAction?.Invoke();
 
             loadSpriteToImage();
 
@@ -423,8 +469,7 @@ namespace DavinciCore
         private void loadSpriteToImage()
         {
             progress = 100;
-            if (onDownloadProgressChange != null)
-                onDownloadProgressChange.Invoke(progress);
+            onDownloadProgressChange?.Invoke(progress);
 
             if (enableLog)
                 Debug.Log("[Davinci] Downloading progress : " + progress + "%");
@@ -490,7 +535,8 @@ namespace DavinciCore
 
             Color color;
 
-            if (targetObj != null || targetMaterial != null) { 
+            if (targetObj != null || targetMaterial != null)
+            {
                 switch (rendererType)
                 {
                     case RendererType.renderer:
@@ -620,10 +666,9 @@ namespace DavinciCore
                         }
                         break;
                 }
-        }
+            }
 
-            if (OnLoadedAction != null)
-                OnLoadedAction.Invoke();
+            OnLoadedAction?.Invoke();
 
             if (enableLog)
                 Debug.Log("[Davinci] Image has been loaded.");
@@ -655,12 +700,12 @@ namespace DavinciCore
             if (enableLog)
                 Debug.LogError("[Davinci] Error : " + message);
 
-            if (onErrorAction != null)
-                onErrorAction.Invoke(message);
+            onErrorAction?.Invoke(message);
 
             if (errorPlaceholder != null)
                 StartCoroutine(ImageLoader(errorPlaceholder));
-            else finish();
+            else
+				finish();
         }
 
         private void finish()
@@ -681,8 +726,7 @@ namespace DavinciCore
                 }
             }
 
-            if (onEndAction != null)
-                onEndAction.Invoke();
+            onEndAction?.Invoke();
 
             Invoke("destroyer", 0.5f);
         }
