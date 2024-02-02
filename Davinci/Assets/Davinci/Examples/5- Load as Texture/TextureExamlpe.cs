@@ -11,22 +11,22 @@ public class TextureExamlpe : MonoBehaviour
 
     private void Start()
     {
-        Davinci.get()
-            .load(imgUrl1)
-            .into(cube1)
-            .setLoadingPlaceholder(loadingSpr)
-            .setErrorPlaceholder(errorSpr)
-            .setFadeTime(2f)
-            .setCached(false)
-            .start();
+        Davinci.Get()
+            .Load(imgUrl1)
+            .Into(cube1)
+            .SetLoadingPlaceholder(loadingSpr)
+            .SetErrorPlaceholder(errorSpr)
+            .SetFadeTime(2f)
+            .SetCached(false)
+            .StartLoad();
 
-        Davinci.get()
-            .load(imgUrl2)
-            .into(cube2)
-            .setLoadingPlaceholder(loadingSpr)
-            .setErrorPlaceholder(errorSpr)
-            .setFadeTime(0f)
-            .setCached(false)
-            .start();
+        Davinci.Get()
+            .Load(imgUrl2)
+            .Into(cube2)
+            .SetLoadingPlaceholder(loadingSpr)
+            .SetErrorPlaceholder(errorSpr)
+            .SetFadeTime(0f)
+            .SetCached(false)
+            .StartLoad();
     }
 }

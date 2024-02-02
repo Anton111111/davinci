@@ -10,6 +10,6 @@ public class SimpleExample : MonoBehaviour
     private void Start()
     {
         //Simple usage - Single line of code and ready to go!
-        Davinci.get().load(imageUrl).into(image).start();
+        Davinci.Get().Load(imageUrl).Into(image).StartLoad();
     }
 }

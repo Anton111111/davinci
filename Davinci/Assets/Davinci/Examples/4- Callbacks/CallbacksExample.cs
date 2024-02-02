@@ -13,37 +13,37 @@ public class CallbacksExample : MonoBehaviour
     private void Start()
     {
         //Use with... to add callbacks
-        Davinci.get()
-            .load(imageUrl)
-            .into(image)
-            .withStartAction(() =>
+        Davinci.Get()
+            .Load(imageUrl)
+            .Into(image)
+            .WithStartAction(() =>
             {
                 statusTxt.text = "Download has been started.";
             })
-            .withDownloadProgressChangedAction((progress) =>
+            .WithDownloadProgressChangedAction((progress) =>
             {
                 statusTxt.text = "Download progress: " + progress;
             })
-            .withDownloadedAction(() =>
+            .WithDownloadedAction(() =>
             {
                 statusTxt.text = "Download has been completed.";
             })
-            .withLoadedAction(() =>
+            .WithLoadedAction(() =>
             {
                 statusTxt.text = "Image has been loaded.";
             })
-            .withErrorAction((error) =>
+            .WithErrorAction((error) =>
             {
                 statusTxt.text = "Got error : " + error;
             })
-            .withEndAction(() =>
+            .WithEndAction(() =>
             {
                 print("Operation has been finished.");
             })
-            .setLoadingPlaceholder(loadingSpr)
-            .setErrorPlaceholder(errorSpr)
-            .setFadeTime(0.8f)
-            .setCached(false)
-            .start();
+            .SetLoadingPlaceholder(loadingSpr)
+            .SetErrorPlaceholder(errorSpr)
+            .SetFadeTime(0.8f)
+            .SetCached(false)
+            .StartLoad();
     }
 }

@@ -16,28 +16,28 @@ public class FadingExample : MonoBehaviour
     {
         //Use setFadeTime to set fading animation time. Set 0 for disable fading.
 
-        Davinci.get()
-            .load(url)
-            .setLoadingPlaceholder(loadingSpr)
-            .setErrorPlaceholder(errorSpr)
-            .into(image_1)
-            .setFadeTime(2)
-            .start();
+        Davinci.Get()
+            .Load(url)
+            .SetLoadingPlaceholder(loadingSpr)
+            .SetErrorPlaceholder(errorSpr)
+            .Into(image_1)
+            .SetFadeTime(2)
+            .StartLoad();
 
-        Davinci.get()
-            .load(url)
-            .setLoadingPlaceholder(loadingSpr)
-            .setErrorPlaceholder(errorSpr)
-            .into(image_2)
-            .setFadeTime(5)
-            .start();
+        Davinci.Get()
+            .Load(url)
+            .SetLoadingPlaceholder(loadingSpr)
+            .SetErrorPlaceholder(errorSpr)
+            .Into(image_2)
+            .SetFadeTime(5)
+            .StartLoad();
 
-        Davinci.get()
-            .load(url)
-            .setFadeTime(0)//disable fading
-            .setLoadingPlaceholder(loadingSpr)
-            .setErrorPlaceholder(errorSpr)
-            .into(image_3)
-            .start();
+        Davinci.Get()
+            .Load(url)
+            .SetFadeTime(0)//disable fading
+            .SetLoadingPlaceholder(loadingSpr)
+            .SetErrorPlaceholder(errorSpr)
+            .Into(image_3)
+            .StartLoad();
     }
 }

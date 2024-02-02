@@ -16,20 +16,20 @@ public class PlaceholdersExample : MonoBehaviour
     {
         //use setLoadingSprite and setError sprite to set placeholders
 
-        Davinci.get()
-            .load(correctUrl)
-            .setLoadingPlaceholder(loadingSpr)
-            .setErrorPlaceholder(errorSpr)
-            .setCached(false)
-            .into(image_1)
-            .start();
+        Davinci.Get()
+            .Load(correctUrl)
+            .SetLoadingPlaceholder(loadingSpr)
+            .SetErrorPlaceholder(errorSpr)
+            .SetCached(false)
+            .Into(image_1)
+            .StartLoad();
 
-        Davinci.get()
-            .load(wrongUrl)
-            .setLoadingPlaceholder(loadingSpr)
-            .setErrorPlaceholder(errorSpr)
-            .setCached(false)
-            .into(image_2)
-            .start();
+        Davinci.Get()
+            .Load(wrongUrl)
+            .SetLoadingPlaceholder(loadingSpr)
+            .SetErrorPlaceholder(errorSpr)
+            .SetCached(false)
+            .Into(image_2)
+            .StartLoad();
     }
 }
